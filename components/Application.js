@@ -90,6 +90,7 @@ export default function ApprovalModal({ onClose }) {
               <div className="w-[82%] mt-2 text-center">
                 {error && <p className="text-red-500 text-[13px]">{error}</p>}
               </div>
+              <p className="absolute right-24 top-[25rem] text-[10px] text-gray-500">4 out of 250 words</p>
             </div>
 
             {/* Buttons */}
