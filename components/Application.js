@@ -10,10 +10,20 @@ export default function ApprovalModal({ onClose }) {
   const [error, setError] = useState(""); // State for validation error
 
   const handleSubmit = () => {
+    const wordCount = message.trim().split(/\s+/).length; // Calculate word count
+
     if (!message.trim()) {
       setError("Message is required."); // Show error if message is empty
       return;
     }
+
+    if (wordCount > 250) {
+      setError(
+        "Maximum word limit exceeded. Please limit your message to 250 words."
+      );
+      return;
+    }
+
     setError(""); // Clear any existing error
     setIsConfirmationOpen(false); // Close the confirmation modal
     setIsSuccessOpen(true); // Open the success modal
@@ -50,22 +60,32 @@ export default function ApprovalModal({ onClose }) {
 
             {/* Message Input */}
             <div className="flex flex-col items-center">
-              <p className="text-[13px] text-gray-800 my-5 text-center">
-                Send a message to the MPP Director/Manager.
-              </p>
-              <textarea
-                className="mt-2 w-[82%] p-2 border-gray-300 text-[13px] border-2 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-800"
-                placeholder="Begin typing or copy and paste..."
-                maxLength={250}
-                rows={5}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-              {/* Error Message */}
-              {error && (
-                <p className="text-red-500 text-[13px] mt-2">{error}</p>
-              )}
-            </div>
+  <p className="text-[13px] text-gray-800 my-5 text-center">
+    Send a message to the MPP Director/Manager.
+  </p>
+  <textarea
+    className="mt-2 w-[82%] p-2 border-gray-300 text-[13px] border-2 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-800"
+    placeholder="Begin typing or copy and paste..."
+    rows={5}
+    value={message}
+    onChange={(e) => {
+      const inputValue = e.target.value.trim(); // Remove extra spaces from both ends
+      const wordsArray = inputValue ? inputValue.split(/\s+/) : []; // Split into words, handling empty input
+      const wordCount = wordsArray.length;
+
+      setMessage(e.target.value); // Update message state
+
+      if (wordCount > 250) {
+        setError("Maximum word limit exceeded. Maximum words limit is 250.");
+      } else {
+        setError(""); // Clear error when word count is valid
+      }
+    }}
+  />
+  {/* Error Message */}
+  {error && <p className="text-red-500 text-[13px] mt-2">{error}</p>}
+</div>
+
 
             {/* Buttons */}
             <div className="flex gap-6 mt-6 text-center justify-center text-[14px] mb-[40px]">
