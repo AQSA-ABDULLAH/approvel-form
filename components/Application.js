@@ -6,8 +6,15 @@ import { useState } from "react";
 export default function ApprovalModal({ onClose }) {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(true);
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [message, setMessage] = useState(""); // State for textarea input
+  const [error, setError] = useState(""); // State for validation error
 
   const handleSubmit = () => {
+    if (!message.trim()) {
+      setError("Message is required."); // Show error if message is empty
+      return;
+    }
+    setError(""); // Clear any existing error
     setIsConfirmationOpen(false); // Close the confirmation modal
     setIsSuccessOpen(true); // Open the success modal
   };
@@ -51,8 +58,13 @@ export default function ApprovalModal({ onClose }) {
                 placeholder="Begin typing or copy and paste..."
                 maxLength={250}
                 rows={5}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
               />
-
+              {/* Error Message */}
+              {error && (
+                <p className="text-red-500 text-[13px] mt-2">{error}</p>
+              )}
             </div>
 
             {/* Buttons */}
