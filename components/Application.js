@@ -28,6 +28,23 @@ export default function ApprovalModal({ onClose }) {
     setIsSuccessOpen(true); // Open the success modal
   };
 
+  const handleTextareaChange = (e) => {
+    const inputValue = e.target.value.trim();
+    const wordsArray = inputValue.split(/\s+/); // Count words
+    const wordCount = wordsArray.length;
+    const letterCount = inputValue.length; // Get the total number of characters
+
+    setMessage(inputValue); // Update the message state
+
+    if (wordCount > 4) {
+      setError("Maximum word limit exceeded. Only 4 words are allowed.");
+    } else if (letterCount > 250) {
+      setError("Maximum letter limit exceeded. Only 250 characters are allowed.");
+    } else {
+      setError(""); // Clear error if valid
+    }
+  };
+
   return (
     <div>
       {/* Confirmation Modal */}
@@ -67,20 +84,7 @@ export default function ApprovalModal({ onClose }) {
                 placeholder="Begin typing or copy and paste..."
                 rows={5}
                 value={message}
-                onChange={(e) => {
-                  const inputValue = e.target.value; // Preserve original input value
-                  const wordsArray = inputValue.trim().split(/\s+/); // Split by whitespace to count words
-                  const wordCount = wordsArray.length; // Total word count
-
-                  setMessage(inputValue); // Update message state
-
-                  if (wordCount > 4) {
-                    setError("Maximum word limit exceeded. Only 4 Out of 250 words are allowed.");
-                  } else {
-                    setError(""); // Clear error when word count is valid
-                  }
-                  
-                }}
+                onChange={handleTextareaChange}
               />
               {/* Word Limit and Error Message */}
               <div className="w-[82%] mt-2 text-center">
@@ -93,6 +97,7 @@ export default function ApprovalModal({ onClose }) {
               <button
                 className="bg-blue-800 text-white px-4 py-2 rounded-[4px] hover:bg-blue-700"
                 onClick={handleSubmit}
+                disabled={!!error} // Disable if error exists
               >
                 Yes, SUBMIT
               </button>
@@ -136,4 +141,5 @@ export default function ApprovalModal({ onClose }) {
     </div>
   );
 }
+
 
